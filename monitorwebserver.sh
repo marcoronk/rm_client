@@ -2,10 +2,10 @@
 
 PHP_BIN="/usr/bin/php" # Path to PHP binary
 DOCUMENT_ROOT="/var/www/" # Document root of the server
-HOST="127.0.0.1" # Host to bind the server
+HOST="0.0.0.0" # Host to bind the server
 PORT="8000" # Port to bind the server
-PID_FILE="/var/run/php_server.pid" # PID file location
-LOG_FILE="/var/log/php_server.log" # Log file location
+PID_FILE="/tmp/php_server.pid" # PID file location
+LOG_FILE="/tmp/php_server.log" # Log file location
 
 # Function to start the server
 start() {
