@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,41 +40,71 @@
             color: red;
             font-weight: bold;
         }
+        .boxalert {
+
+            background-color: orange;
+            border:1px solid red;
+            color:black;
+            font-size:1.4rem;
+            font-weight: bold;
+            width:100%;
+            height:100px;
+
+        }
     </style>
 </head>
 <body>
-    <h1>System Monitor Information</h1>
+    <h1>System Monitor</h1>
+    <hr>
 
     <?php
     $filePath = '/proc/sys_monitor';
+    $text="";
 
     // Controlla se il file esiste ed è leggibile
     if (is_readable($filePath)) {
         // Legge il contenuto del file
         $content = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
+        $message="";
+        ?>
+      
+        <?php
+        $alert="";
         if ($content !== false) {
-            echo "<table>";
-            echo "<tr><th>Key</th><th>Value</th></tr>";
+            $text.= "<table>";
+            $text.= "<tr><th>Key</th><th>Value</th></tr>";
 
             // Processa ogni riga del file
             foreach ($content as $line) {
-                // Dividi la riga in chiave e valore usando uno spazio o un tab come separatore
+                if (str_contains($line, 'ALERT')) {
+                    $alert.=$line."<br><br>";
+                    continue;
+                }
                 $parts = preg_split('/\s+/', $line, 2);
                 if (count($parts) === 2) {
                     $key = htmlspecialchars($parts[0]);
                     $value = htmlspecialchars($parts[1]);
-                    echo "<tr><td>$key</td><td>$value</td></tr>";
+                    $text.= "<tr><td>$key</td><td>$value</td></tr>";
                 }
             }
 
-            echo "</table>";
+            $text.= "</table>";
         } else {
             echo "<p class='error'>Errore durante la lettura del file $filePath.</p>";
         }
     } else {
         echo "<p class='error'>Il file $filePath non esiste o non è leggibile.</p>";
     }
+    if (empty($alert))
+      $alert="No alert message.";
     ?>
+      <div class="boxalert">
+           <?= $alert;?>
+
+    </div>
+    <div>
+<?= $text;?>
+
+    </div>
 </body>
 </html>
