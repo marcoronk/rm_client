@@ -51,10 +51,19 @@
             height:100px;
 
         }
+        .title {
+            text-align:center;
+        }
     </style>
+     <script>
+   window.setTimeout( function() {
+  window.location.reload();
+}, 5000);
+</script>
 </head>
 <body>
-    <h1>System Monitor</h1>
+   
+    <h1 class="title">System Monitor</h1>
     <hr>
 
     <?php
