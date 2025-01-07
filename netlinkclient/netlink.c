@@ -12,10 +12,9 @@ int main() {
     struct sockaddr_nl sa;
     int sock;
     struct nlmsghdr *nlh;
-    char *msg = "Messaggio dal programma utente";
+    char *msg = "";
     char buffer[MAX_PAYLOAD];
 
-    // Crea una socket Netlink
     sock = socket(AF_NETLINK, SOCK_RAW, NETLINK_USER);
     if (sock < 0) {
         perror("Socket error");
@@ -24,9 +23,9 @@ int main() {
 
     memset(&sa, 0, sizeof(sa));
     sa.nl_family = AF_NETLINK;
-    sa.nl_pid = getpid();  // Assegna il PID di questo processo
+    sa.nl_pid = getpid();
 
-    // Bind della socket per legarla al PID del processo
+
     if (bind(sock, (struct sockaddr*)&sa, sizeof(sa)) < 0) {
         perror("Bind error");
         exit(EXIT_FAILURE);
@@ -34,19 +33,19 @@ int main() {
 
     
 
-    // Invio un messaggio al kernel
+  
     nlh = (struct nlmsghdr*)malloc(NLMSG_SPACE(MAX_PAYLOAD));
     memset(nlh, 0, NLMSG_SPACE(MAX_PAYLOAD));
 
     nlh->nlmsg_len = NLMSG_SPACE(strlen(msg));
-    nlh->nlmsg_type = 0;  // Tipo di messaggio
+    nlh->nlmsg_type = 0; 
     nlh->nlmsg_flags = 0;
     nlh->nlmsg_seq = 0;
     nlh->nlmsg_pid = getpid();
 
     memcpy(NLMSG_DATA(nlh), msg, strlen(msg));
 
-    // Invia il messaggio al kernel
+   
     if (send(sock, nlh, nlh->nlmsg_len, 0) < 0) {
         perror("Error Send");
         free(nlh);
@@ -55,7 +54,7 @@ int main() {
 
     free(nlh);
 
-    // Ora ricevo un messaggio dal kernel
+   
     while (1) {
         nlh = (struct nlmsghdr*)malloc(NLMSG_SPACE(MAX_PAYLOAD));
         memset(nlh, 0, NLMSG_SPACE(MAX_PAYLOAD));
